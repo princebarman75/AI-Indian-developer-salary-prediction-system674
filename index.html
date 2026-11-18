@@ -1,0 +1,564 @@
+ 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAJ AI - Salary Prediction System</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+ --bg:#07111f;
+ --panel:#101e32;
+ --blue:#168cff;
+ --cyan:#32d8ff;
+ --text:#f3f7ff;
+ --muted:#9eb2cc;
+}
+body{
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
+header{
+ padding:22px;
+ background:linear-gradient(120deg,#102c55,#061326);
+ border-bottom:1px solid #1b75bc;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:15px;
+}
+.logo{font-size:23px;font-weight:bold;color:#5dd7ff}
+.profile{color:#c3d9f5;font-size:13px}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+ width:235px;
+ background:#0b192b;
+ padding:20px 12px;
+ border-right:1px solid #1b3554;
+ flex-shrink:0;
+}
+.sidebar h3{
+ color:#58caff;
+ margin:10px;
+ font-size:13px;
+}
+.sidebar a{
+ display:block;
+ color:#c6d7ed;
+ text-decoration:none;
+ padding:13px;
+ margin:5px 0;
+ border-radius:9px;
+ font-size:14px;
+}
+.sidebar a:hover,.sidebar a.active{
+ background:#153d68;
+ color:#6edaff;
+}
+main{flex:1;padding:25px;min-width:0}
+.welcome{
+ padding:28px;
+ border-radius:17px;
+ background:linear-gradient(120deg,#123f79,#12203c);
+ border:1px solid #287ac0;
+ margin-bottom:24px;
+}
+.welcome h1{font-size:28px;color:#69d8ff}
+.welcome p{color:#d3e6ff;line-height:1.8;margin-top:10px}
+.section-title{
+ color:#6bd7ff;
+ margin:25px 0 15px;
+ font-size:21px;
+}
+.cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+ gap:15px;
+}
+.card{
+ background:var(--panel);
+ border:1px solid #223d5d;
+ border-radius:14px;
+ padding:19px;
+}
+.card h3{font-size:14px;color:#9cb9d8}
+.card .number{
+ font-size:24px;
+ color:#62d9ff;
+ margin-top:12px;
+ font-weight:bold;
+}
+.card p{color:var(--muted);font-size:13px;line-height:1.6;margin-top:8px}
+.form-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:15px;
+}
+label{display:block;color:#c9ddf4;margin:13px 0 7px;font-size:14px}
+input,select{
+ width:100%;
+ padding:13px;
+ border-radius:9px;
+ background:#071629;
+ border:1px solid #345477;
+ color:white;
+ font-size:14px;
+}
+button{
+ background:linear-gradient(90deg,#087bff,#00bce7);
+ color:white;
+ border:0;
+ border-radius:9px;
+ padding:14px 20px;
+ font-size:15px;
+ font-weight:bold;
+ cursor:pointer;
+}
+button:hover{filter:brightness(1.15)}
+.predict-btn{width:100%;margin-top:22px}
+.result{
+ display:none;
+ margin-top:22px;
+ background:#092e40;
+ border:1px solid #1bb8ce;
+ border-radius:15px;
+ padding:23px;
+}
+.big-salary{
+ color:#62f0bb;
+ font-size:35px;
+ font-weight:bold;
+ margin:15px 0;
+}
+.result-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+ gap:12px;
+ margin-top:18px;
+}
+.result-grid div{
+ background:#143c53;
+ padding:15px;
+ border-radius:10px;
+}
+.result-grid h4{color:#6bd8ff;font-size:13px}
+.result-grid p{font-size:17px;margin-top:10px}
+.bar-area{margin-top:20px}
+.bar-row{margin:15px 0}
+.bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.bar{
+ background:#243b54;
+ height:12px;
+ border-radius:20px;
+ overflow:hidden;
+}
+.bar span{
+ display:block;
+ height:100%;
+ background:linear-gradient(90deg,#087bff,#37e2ff);
+ border-radius:20px;
+}
+.definition{
+ padding:16px;
+ background:#132a44;
+ border-radius:10px;
+ margin:10px 0;
+ border-left:3px solid #27bfff;
+}
+.definition h3{color:#6ad8ff;font-size:16px;margin-bottom:7px}
+.definition p{color:#c8d9ec;line-height:1.7;font-size:14px}
+footer{
+ padding:25px;
+ text-align:center;
+ color:#9eb4ce;
+ border-top:1px solid #243b56;
+ margin-top:30px;
+ line-height:1.9;
+}
+@media(max-width:750px){
+ .layout{display:block}
+ .sidebar{width:100%;display:flex;overflow-x:auto;padding:8px}
+ .sidebar h3{display:none}
+ .sidebar a{white-space:nowrap}
+ main{padding:14px}
+ .welcome h1{font-size:23px}
+ header{padding:16px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">🚀 prince ai</div>
+<div class="profile">
+प्रोजेक्ट निर्माता: prince barmanai<br>
+कक्षा: 9वीं | भारत
+</div>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+<h3>MAIN MENU</h3>
+<a href="#home" class="active">🏠 डैशबोर्ड</a>
+<a href="#predict">🤖 सैलरी प्रेडिक्शन</a>
+<a href="#cities">🏙️ भारतीय शहर</a>
+<a href="#roles">💻 डेवलपर कैटेगरी</a>
+<a href="#skills">📚 स्किल्स</a>
+<a href="#definitions">📖 सभी परिभाषाएँ</a>
+<a href="#about">👨‍💻 मेरे बारे में</a>
+</aside>
+
+<main>
+
+<section class="welcome" id="home">
+<h1>नमस्कार! prince ai में आपका स्वागत है 👋</h1>
+<p>
+भारतीय डेवलपर सैलरी प्रेडिक्शन सिस्टम में आपका स्वागत है।
+यह डिजिटल वेबसाइट डेवलपर की स्किल्स, अनुभव, शिक्षा,
+शहर और कंपनी के प्रकार के आधार पर अनुमानित वेतन दिखाती है।
+</p>
+</section>
+
+<h2 class="section-title">📊 डिजिटल डैशबोर्ड</h2>
+
+<div class="cards">
+<div class="card">
+<h3>प्रोजेक्ट का नाम</h3>
+<div class="number">RAJ AI</div>
+<p>AI Salary Predictor</p>
+</div>
+<div class="card">
+<h3>देश</h3>
+<div class="number">भारत 🇮🇳</div>
+<p>भारतीय शहरों के लिए</p>
+</div>
+<div class="card">
+<h3>डेवलपर कैटेगरी</h3>
+<div class="number">9+</div>
+<p>अलग-अलग तकनीकी भूमिकाएँ</p>
+</div>
+<div class="card">
+<h3>वेबसाइट भाषा</h3>
+<div class="number">हिंदी</div>
+<p>सरल हिंदी इंटरफेस</p>
+</div>
+</div>
+
+<section class="card" id="predict" style="margin-top:25px">
+<h2 class="section-title">🤖 AI सैलरी प्रेडिक्शन</h2>
+<p style="color:#a9c5df;line-height:1.7">
+नीचे अपनी जानकारी भरें और अनुमानित भारतीय डेवलपर वेतन देखें।
+</p>
+
+<div class="form-grid">
+
+<div>
+<label>आपका नाम</label>
+<input id="name" placeholder="नाम लिखें">
+</div>
+
+<div>
+<label>डेवलपर का प्रकार</label>
+<select id="role">
+<option value="1">वेब डेवलपर</option>
+<option value="1.12">सॉफ्टवेयर डेवलपर</option>
+<option value="1.25">AI / ML इंजीनियर</option>
+<option value="1.1">ऐप डेवलपर</option>
+<option value="1.15">डेटा साइंटिस्ट</option>
+<option value="1.08">फ्रंटएंड डेवलपर</option>
+<option value="1.12">बैकएंड डेवलपर</option>
+<option value="1.18">क्लाउड इंजीनियर</option>
+<option value="1.15">साइबर सिक्योरिटी</option>
+</select>
+</div>
+
+<div>
+<label>भारत का शहर</label>
+<select id="city">
+<option value="1.15">बेंगलुरु</option>
+<option value="1.12">मुंबई</option>
+<option value="1.10">दिल्ली</option>
+<option value="1.08">हैदराबाद</option>
+<option value="1.05">पुणे</option>
+<option value="1.04">चेन्नई</option>
+<option value="1.02">गुरुग्राम</option>
+<option value="1.02">नोएडा</option>
+<option value="1">कोलकाता</option>
+<option value="1">जयपुर</option>
+<option value=".95">भोपाल</option>
+<option value=".90">जबलपुर</option>
+<option value=".85">शहडोल</option>
+<option value="1">इंदौर</option>
+<option value="1">लखनऊ</option>
+<option value="1">अहमदाबाद</option>
+<option value="1">चंडीगढ़</option>
+<option value="1">अन्य शहर</option>
+</select>
+</div>
+
+<div>
+<label>काम का अनुभव</label>
+<select id="exp">
+<option value="0">फ्रेशर (0 वर्ष)</option>
+<option value="1">1 वर्ष</option>
+<option value="2">2 वर्ष</option>
+<option value="3">3 वर्ष</option>
+<option value="5">4-5 वर्ष</option>
+<option value="8">6-8 वर्ष</option>
+<option value="12">9+ वर्ष</option>
+</select>
+</div>
+
+<div>
+<label>स्किल लेवल</label>
+<select id="skill">
+<option value=".8">शुरुआती</option>
+<option value="1">मध्यम</option>
+<option value="1.3">उन्नत</option>
+<option value="1.6">विशेषज्ञ</option>
+</select>
+</div>
+
+<div>
+<label>शिक्षा</label>
+<select id="edu">
+<option value="1">अभी पढ़ाई जारी</option>
+<option value="1.03">डिप्लोमा</option>
+<option value="1.08">ग्रेजुएशन</option>
+<option value="1.12">B.Tech / B.E.</option>
+<option value="1.15">मास्टर्स</option>
+</select>
+</div>
+
+<div>
+<label>कंपनी का प्रकार</label>
+<select id="company">
+<option value="1">स्टार्टअप</option>
+<option value="1.12">मध्यम कंपनी</option>
+<option value="1.25">बड़ी IT कंपनी</option>
+<option value="1.40">MNC कंपनी</option>
+</select>
+</div>
+
+</div>
+
+<button class="predict-btn" onclick="predict()">⚡ सैलरी का अनुमान लगाएँ</button>
+
+<div class="result" id="result">
+<h2>🎉 आपका प्रेडिक्शन तैयार है!</h2>
+<p id="welcome"></p>
+<div class="big-salary" id="salary"></div>
+<p>अनुमानित सालाना वेतन (CTC)</p>
+
+<div class="result-grid">
+<div><h4>मासिक वेतन</h4><p id="monthly"></p></div>
+<div><h4>न्यूनतम अनुमान</h4><p id="min"></p></div>
+<div><h4>अधिकतम अनुमान</h4><p id="max"></p></div>
+</div>
+
+<div class="bar-area">
+<h3 style="margin:20px 0;color:#67d5ff">📈 वेतन विवरण</h3>
+<div class="bar-row">
+<div class="bar-label"><span>न्यूनतम</span><span>80%</span></div>
+<div class="bar"><span style="width:80%"></span></div>
+</div>
+<div class="bar-row">
+<div class="bar-label"><span>अनुमानित वेतन</span><span>100%</span></div>
+<div class="bar"><span style="width:100%"></span></div>
+</div>
+<div class="bar-row">
+<div class="bar-label"><span>अधिकतम</span><span>120%</span></div>
+<div class="bar"><span style="width:100%"></span></div>
+</div>
+</div>
+<p id="disclaimer" style="color:#c5e4f5;margin-top:18px;line-height:1.7"></p>
+</div>
+</section>
+
+<section id="cities">
+<h2 class="section-title">🏙️ भारत के प्रमुख शहर</h2>
+<div class="cards">
+<div class="card"><h3>बेंगलुरु</h3><p>भारत का प्रमुख तकनीकी केंद्र।</p></div>
+<div class="card"><h3>मुंबई</h3><p>वित्त और तकनीकी कंपनियों का केंद्र।</p></div>
+<div class="card"><h3>दिल्ली</h3><p>IT और स्टार्टअप के अवसर।</p></div>
+<div class="card"><h3>हैदराबाद</h3><p>सॉफ्टवेयर और टेक्नोलॉजी कंपनियाँ।</p></div>
+<div class="card"><h3>पुणे</h3><p>IT और इंजीनियरिंग क्षेत्र।</p></div>
+<div class="card"><h3>चेन्नई</h3><p>सॉफ्टवेयर और तकनीकी सेवाएँ।</p></div>
+<div class="card"><h3>भोपाल</h3><p>मध्य प्रदेश का प्रमुख शहर।</p></div>
+<div class="card"><h3>शहडोल</h3><p>मध्य प्रदेश का क्षेत्रीय शहर।</p></div>
+</div>
+</section>
+
+<section id="roles">
+<h2 class="section-title">💻 डेवलपर की कैटेगरी</h2>
+<div class="cards">
+<div class="card"><h3>वेब डेवलपर</h3><p>वेबसाइट और वेब एप्लिकेशन बनाता है।</p></div>
+<div class="card"><h3>सॉफ्टवेयर डेवलपर</h3><p>कंप्यूटर और मोबाइल सॉफ्टवेयर बनाता है।</p></div>
+<div class="card"><h3>AI इंजीनियर</h3><p>कृत्रिम बुद्धिमत्ता वाले सिस्टम बनाता है।</p></div>
+<div class="card"><h3>डेटा साइंटिस्ट</h3><p>डेटा का विश्लेषण करता है।</p></div>
+<div class="card"><h3>ऐप डेवलपर</h3><p>मोबाइल एप्लिकेशन बनाता है।</p></div>
+<div class="card"><h3>क्लाउड इंजीनियर</h3><p>क्लाउड सिस्टम पर काम करता है।</p></div>
+<div class="card"><h3>फ्रंटएंड डेवलपर</h3><p>वेबसाइट का दिखाई देने वाला हिस्सा बनाता है।</p></div>
+<div class="card"><h3>बैकएंड डेवलपर</h3><p>सर्वर और डेटाबेस का काम करता है।</p></div>
+<div class="card"><h3>साइबर सिक्योरिटी</h3><p>कंप्यूटर सिस्टम की सुरक्षा में मदद करता है।</p></div>
+</div>
+</section>
+
+<section id="skills">
+<h2 class="section-title">📚 प्रोग्रामिंग स्किल्स</h2>
+<div class="cards">
+<div class="card"><h3>HTML</h3><p>वेबसाइट का ढाँचा तैयार करने की भाषा।</p></div>
+<div class="card"><h3>CSS</h3><p>वेबसाइट को सुंदर बनाने की भाषा।</p></div>
+<div class="card"><h3>JavaScript</h3><p>वेबसाइट में इंटरैक्टिव फीचर जोड़ती है।</p></div>
+<div class="card"><h3>Python</h3><p>AI और डेटा साइंस में उपयोगी भाषा।</p></div>
+<div class="card"><h3>Java</h3><p>सॉफ्टवेयर और ऐप बनाने में उपयोगी।</p></div>
+<div class="card"><h3>SQL</h3><p>डेटाबेस में जानकारी संभालने की भाषा।</p></div>
+</div>
+</section>
+
+<section id="definitions">
+<h2 class="section-title">📖 सभी महत्वपूर्ण परिभाषाएँ</h2>
+
+<div class="definition">
+<h3>1. Artificial Intelligence (AI)</h3>
+<p>AI अर्थात कृत्रिम बुद्धिमत्ता। यह ऐसी तकनीक है जिसमें कंप्यूटर को कुछ ऐसे काम करने योग्य बनाया जाता है जिनमें सामान्यतः मानव बुद्धि की आवश्यकता होती है।</p>
+</div>
+
+<div class="definition">
+<h3>2. Machine Learning (ML)</h3>
+<p>मशीन लर्निंग AI की एक शाखा है। इसमें कंप्यूटर डेटा से पैटर्न सीखकर अनुमान या निर्णय करना सीखता है।</p>
+</div>
+
+<div class="definition">
+<h3>3. Dataset</h3>
+<p>डेटासेट व्यवस्थित जानकारी का संग्रह होता है, जिसका उपयोग मॉडल को प्रशिक्षित करने और जाँचने के लिए किया जाता है।</p>
+</div>
+
+<div class="definition">
+<h3>4. Prediction</h3>
+<p>Prediction का अर्थ उपलब्ध जानकारी के आधार पर किसी परिणाम का अनुमान लगाना है।</p>
+</div>
+
+<div class="definition">
+<h3>5. Algorithm</h3>
+<p>एल्गोरिदम किसी समस्या को हल करने के लिए बनाए गए चरणों या निर्देशों का समूह होता है।</p>
+</div>
+
+<div class="definition">
+<h3>6. HTML</h3>
+<p>HTML एक मार्कअप भाषा है जो वेबसाइट का ढाँचा तैयार करती है।</p>
+</div>
+
+<div class="definition">
+<h3>7. CSS</h3>
+<p>CSS वेबसाइट के रंग, आकार, डिजाइन और लेआउट को नियंत्रित करती है।</p>
+</div>
+
+<div class="definition">
+<h3>8. JavaScript</h3>
+<p>JavaScript वेबसाइट को इंटरैक्टिव और गतिशील बनाने में मदद करती है।</p>
+</div>
+
+<div class="definition">
+<h3>9. Python</h3>
+<p>Python एक प्रोग्रामिंग भाषा है जिसका उपयोग AI, मशीन लर्निंग और डेटा विश्लेषण में किया जाता है।</p>
+</div>
+
+<div class="definition">
+<h3>10. Database</h3>
+<p>डेटाबेस जानकारी को व्यवस्थित तरीके से रखने और प्राप्त करने की प्रणाली है।</p>
+</div>
+
+<div class="definition">
+<h3>11. CTC</h3>
+<p>CTC का पूरा नाम Cost to Company है। यह कंपनी द्वारा कर्मचारी पर एक वर्ष में खर्च की जाने वाली कुल राशि होती है।</p>
+</div>
+
+<div class="definition">
+<h3>12. Dashboard</h3>
+<p>डैशबोर्ड एक ऐसा डिजिटल पेज है जहाँ महत्वपूर्ण जानकारी और आँकड़े एक जगह दिखाई देते हैं।</p>
+</div>
+
+<div class="definition">
+<h3>13. Model Training</h3>
+<p>मॉडल ट्रेनिंग में मशीन लर्निंग मॉडल को उदाहरण वाले डेटा से पैटर्न सीखने के लिए प्रशिक्षित किया जाता है।</p>
+</div>
+
+<div class="definition">
+<h3>14. Accuracy</h3>
+<p>Accuracy बताती है कि किसी मॉडल के परिणाम कितने सही हैं।</p>
+</div>
+
+</section>
+
+<section id="about">
+<h2 class="section-title">👨‍💻 मेरे बारे में</h2>
+<div class="card">
+<h2>RAJ KUMAR NAYAK</h2>
+<p style="color:#c8dcef;line-height:2;margin-top:12px">
+नाम: Raj Kumar Nayak<br>
+कक्षा: 9वीं<br>
+प्रोजेक्ट: AI Indian Developer Salary Prediction System<br>
+विषय: Artificial Intelligence<br>
+उद्देश्य: नई तकनीक सीखना और आधुनिक वेबसाइट बनाना।
+</p>
+</div>
+</section>
+
+<footer>
+<h2>🚀 RAJ AI SALARY PREDICTOR</h2>
+<p>निर्माता: Raj Kumar Nayak | कक्षा 9वीं</p>
+<p>भारत में तकनीक और AI सीखने की एक छोटी शुरुआत।</p>
+<p>© 2026 RAJ AI Project</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+function money(n){
+ return "₹"+Math.round(n).toLocaleString("en-IN");
+}
+
+function predict(){
+ const name=document.getElementById("name").value.trim();
+
+ if(!name){
+  alert("कृपया अपना नाम लिखें!");
+  return;
+ }
+
+ const role=Number(document.getElementById("role").value);
+ const city=Number(document.getElementById("city").value);
+ const exp=Number(document.getElementById("exp").value);
+ const skill=Number(document.getElementById("skill").value);
+ const edu=Number(document.getElementById("edu").value);
+ const company=Number(document.getElementById("company").value);
+
+ // शैक्षणिक डेमो गणना
+ const annual=300000*role*city*(1+exp*.13)*skill*edu*company;
+
+ document.getElementById("welcome").innerText=
+ "नमस्ते "+name+"! आपकी जानकारी के आधार पर:";
+
+ document.getElementById("salary").innerText=money(annual);
+ document.getElementById("monthly").innerText=money(annual/12);
+ document.getElementById("min").innerText=money(annual*.8);
+ document.getElementById("max").innerText=money(annual*1.2);
+
+ document.getElementById("disclaimer").innerText=
+ "यह एक शैक्षणिक अनुमान है। यह प्रशिक्षित मशीन लर्निंग मॉडल या वास्तविक बाजार सर्वेक्षण का परिणाम नहीं है। वास्तविक वेतन कंपनी, कौशल और नौकरी के अनुसार अलग हो सकता है।";
+
+ const result=document.getElementById("result");
+ result.style.display="block";
+ result.scrollIntoView({behavior:"smooth",block:"center"});
+}
+</script>
+</body>
+</html>
